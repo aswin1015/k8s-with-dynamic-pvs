@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: rajcm
+  namespace: raj
+data:
+  APP_NAME: "Springboot Kubernetes Demo"
+  ENVIRONMENT: "JDK"
+  APP_MESSAGE: "Hello Yaswanth"

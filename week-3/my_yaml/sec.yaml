@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mysec
+  namespace: raj
+type: opaque
+data: 
+  username: Y2hpbnR1
+  password: cGFzc0AxMjM= 

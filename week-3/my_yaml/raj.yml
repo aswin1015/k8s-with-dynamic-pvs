@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rajdep
+  namespace: raj
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: rajapp
+  template:
+    metadata:
+      name: rajnode
+      labels:
+        app: rajapp
+    spec:
+      containers:
+      - name: rc1
+        image: yaswanthreddy1602/raj:v1
+        envFrom:
+        - configMapRef:
+            name: rajcm
+        env:
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysec
+              key: password
+        ports:
+        - containerPort: 8080
