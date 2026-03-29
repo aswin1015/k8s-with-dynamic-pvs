@@ -1,19 +1,19 @@
 apiVersion: kyverno.io/v1
 kind: Policy
 metadata:
-  name: Banking-Image-Policy
+  name: banking-image-policy
   namespace: banking-app
 spec:
   validationFailureAction: Enforce
   background: true
   rules:
-    - name: allowed-image-registeries
+    - name: allowed-image-registries
       match:
         any:
           - resources:
-              kinds: 
+              kinds:
                 - Pod
-       validate:
+      validate:
         message: "Error: Images are not allowed from this registry"
         foreach:
           - list: "request.object.spec.containers"
