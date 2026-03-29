@@ -1,5 +1,5 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: rabbitmq
   namespace: banking-app
@@ -22,13 +22,19 @@ spec:
         - containerPort: 15672  # UI
 
         volumeMounts:
-        - name: rabbitmq-data
-          mountPath: /rabbit
+        - name: rabbitmq-storage
+          mountPath: /var/lib/rabbitmq
 
-      volumes:
-      - name: rabbitmq-data
-        persistentVolumeClaim:
-          claimName: mypvc
+  volumeClaimTemplates:
+  - metadata:
+      name: rabbitmq-storage
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      storageClassName: nfs-client
+      resources:
+        requests:
+          storage: 1Gi
 
 ---
 apiVersion: v1
@@ -37,7 +43,7 @@ metadata:
   name: rabbitmq
   namespace: banking-app
 spec:
-  type: ClusterIP
+  clusterIP: None
   selector:
     app: rabbitmq-app
   ports:

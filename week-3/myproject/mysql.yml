@@ -49,41 +49,13 @@ data:
         FOREIGN KEY (user_id) REFERENCES users(id)
     );
 ---
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: mypv
-spec:
-  capacity:
-    storage: 4Gi
-  accessModes:
-    - ReadWriteMany
-  persistentVolumeReclaimPolicy: Retain
-  storageClassName: ""
-  hostPath:
-    path: /bank
-    type: DirectoryOrCreate
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: mypvc
-  namespace: banking-app
-spec:
-  accessModes:
-    - ReadWriteMany
-  resources:
-    requests:
-      storage: 2Gi
-  storageClassName: ""
-  volumeName: mypv
----
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: mysql
   namespace: banking-app
 spec:
+  serviceName: "mysql"
   replicas: 1
   selector:
     matchLabels:
@@ -106,18 +78,26 @@ spec:
                   key: MYSQL_ROOT_PASSWORD
             - name: MYSQL_DATABASE
               value: banking_db
+            - name: MYSQL_ROOT_HOST
+              value: "%"
           volumeMounts:
             - name: mysql-storage
               mountPath: /var/lib/mysql
             - name: init-script
               mountPath: /docker-entrypoint-initdb.d
       volumes:
-        - name: mysql-storage
-          persistentVolumeClaim:
-            claimName: mypvc
         - name: init-script
           configMap:
             name: mysql-init-script
+  volumeClaimTemplates:
+  - metadata:
+      name: mysql-storage
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      storageClassName: nfs-client
+      resources:
+        requests:
+          storage: 1Gi
 ---
 apiVersion: v1
 kind: Service
@@ -130,4 +110,4 @@ spec:
   ports:
     - port: 3306
       targetPort: 3306
-  type: ClusterIP
+  clusterIP : None
