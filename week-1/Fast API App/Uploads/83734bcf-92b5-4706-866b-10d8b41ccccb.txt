@@ -1,1 +1,0 @@
-This the content from file 1.txt

@@ -1,8 +1,0 @@
-fastapi
-sqlalchemy
-pydantic
-uvicorn
-jinja2
-pwdlib[argon2]
-python-jose
-python-multipart
