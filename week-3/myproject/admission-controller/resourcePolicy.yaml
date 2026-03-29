@@ -8,13 +8,13 @@ spec:
   background: true
   rules:
 
-    
+    # 🔹 MUTATE
     - name: add-default-resources
       match:
         any:
-        - resources:
-            kinds:
-              - Pod
+          - resources:
+              kinds:
+                - Pod
       mutate:
         foreach:
           - list: "request.object.spec.containers"
@@ -29,14 +29,14 @@ spec:
                       limits:
                         cpu: "500m"
                         memory: "512Mi"
-   
 
+    # 🔹 VALIDATE
     - name: validate-resource-limits
       match:
         any:
-          resources:
-            kinds:
-              - pod
+          - resources:        
+              kinds:
+                - Pod        
       validate:
         message: "Resource Limit exceeded"
         foreach:
@@ -49,4 +49,4 @@ spec:
                     value: "1"
                   - key: "{{ element.resources.limits.memory }}"
                     operator: GreaterThan
-                    value: "1Gi"  
+                    value: "1Gi"
