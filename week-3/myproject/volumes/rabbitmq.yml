@@ -24,6 +24,24 @@ spec:
         volumeMounts:
         - name: rabbitmq-storage
           mountPath: /var/lib/rabbitmq
+        startupProbe:
+          tcpSocket:
+            port: 5672
+          initialDelaySeconds: 10
+          failureThreshold: 30
+          periodSeconds: 5
+        readinessProbe:
+          tcpSocket:
+            port: 5672
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          failureThreshold: 3
+        livenessProbe:
+          tcpSocket:
+            port: 5672
+          initialDelaySeconds: 45
+          periodSeconds: 10
+          failureThreshold: 3
 
   volumeClaimTemplates:
   - metadata:

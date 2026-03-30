@@ -33,9 +33,30 @@ spec:
           image: yaswanthreddy1602/config-service:v1
           envFrom:
             - configMapRef:
-               name: config-service-config
+                name: config-service-config
           ports:
             - containerPort: 3008
+          startupProbe:
+            httpGet:
+              path: /health
+              port: 3008
+            initialDelaySeconds: 5
+            failureThreshold: 30
+            periodSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 3008
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 3008
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            failureThreshold: 3
  
 ---
  
