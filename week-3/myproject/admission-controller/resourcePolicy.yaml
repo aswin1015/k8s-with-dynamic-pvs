@@ -8,7 +8,7 @@ spec:
   background: true
   rules:
 
-    # 🔹 MUTATE
+    
     - name: add-default-resources
       match:
         any:
@@ -27,10 +27,10 @@ spec:
                         cpu: "250m"
                         memory: "256Mi"
                       limits:
-                        cpu: "500m"
-                        memory: "512Mi"
+                        cpu: "3"
+                        memory: "2Gi"
 
-    # 🔹 VALIDATE
+  
     - name: validate-resource-limits
       match:
         any:
@@ -46,7 +46,7 @@ spec:
                 any:
                   - key: "{{ element.resources.limits.cpu }}"
                     operator: GreaterThan
-                    value: "1"
+                    value: "3"
                   - key: "{{ element.resources.limits.memory }}"
                     operator: GreaterThan
-                    value: "1Gi"
+                    value: "3Gi"
