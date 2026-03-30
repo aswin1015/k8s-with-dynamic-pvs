@@ -20,7 +20,14 @@ spec:
             anyPattern:
               - image: "yaswanthreddy1602/*"
               - image: "thamizhanm3/*"
+              - image: "mysql:*"
+              - image: "redis:*"
+              - image: "rabbitmq:*"
+
           - list: "request.object.spec.initContainers"
             anyPattern:
               - image: "yaswanthreddy1602/*"
               - image: "thamizhanm3/*"
+              - image: "mysql:*"
+              - image: "redis:*"
+              - image: "rabbitmq:*"
