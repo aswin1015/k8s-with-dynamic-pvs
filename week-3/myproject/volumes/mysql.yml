@@ -85,6 +85,36 @@ spec:
               mountPath: /var/lib/mysql
             - name: init-script
               mountPath: /docker-entrypoint-initdb.d
+          startupProbe:
+            exec:
+              command:
+              - mysqladmin
+              - ping
+              - -h
+              - localhost
+            initialDelaySeconds: 10
+            failureThreshold: 30
+            periodSeconds: 5
+          readinessProbe:
+            exec:
+              command:
+              - mysqladmin
+              - ping
+              - -h
+              - localhost
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            failureThreshold: 3
+          livenessProbe:
+            exec:
+              command:
+              - mysqladmin
+              - ping
+              - -h
+              - localhost
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            failureThreshold: 3
       volumes:
         - name: init-script
           configMap:
@@ -110,4 +140,4 @@ spec:
   ports:
     - port: 3306
       targetPort: 3306
-  clusterIP : None
+  clusterIP: None
