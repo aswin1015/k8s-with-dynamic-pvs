@@ -1,4 +1,4 @@
-📦 NFS Server Setup for Kubernetes (Dynamic Provisioning)
+# 📦 NFS Server Setup for Kubernetes (Dynamic Provisioning)
 
 Below is a **clean, end-to-end runbook** to set up NFS for your Kubernetes cluster with **dynamic provisioning** (what you’re already using with `nfs-client`).
  
