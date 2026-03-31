@@ -65,11 +65,22 @@ spec:
       labels:
         app: mysql
     spec:
+      securityContext:
+        fsGroup: 999   # Fix NFS permission issues
       containers:
         - name: mysql
           image: mysql:8.0
           ports:
             - containerPort: 3306
+
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "512Mi"
+            limits:
+              cpu: "1"
+              memory: "1Gi"
+
           env:
             - name: MYSQL_ROOT_PASSWORD
               valueFrom:
@@ -80,54 +91,58 @@ spec:
               value: banking_db
             - name: MYSQL_ROOT_HOST
               value: "%"
+
           volumeMounts:
             - name: mysql-storage
               mountPath: /var/lib/mysql
             - name: init-script
               mountPath: /docker-entrypoint-initdb.d
+
           startupProbe:
             exec:
               command:
-              - mysqladmin
-              - ping
-              - -h
-              - localhost
-            initialDelaySeconds: 10
+                - mysqladmin
+                - ping
+                - -h
+                - localhost
+            initialDelaySeconds: 20
             failureThreshold: 30
-            periodSeconds: 5
+            periodSeconds: 10
+
           readinessProbe:
             exec:
               command:
-              - mysqladmin
-              - ping
-              - -h
-              - localhost
-            initialDelaySeconds: 10
-            periodSeconds: 5
-            failureThreshold: 3
+                - mysqladmin
+                - ping
+                - -h
+                - localhost
+            initialDelaySeconds: 20
+            periodSeconds: 10
+
           livenessProbe:
             exec:
               command:
-              - mysqladmin
-              - ping
-              - -h
-              - localhost
+                - mysqladmin
+                - ping
+                - -h
+                - localhost
             initialDelaySeconds: 60
-            periodSeconds: 10
-            failureThreshold: 3
+            periodSeconds: 20
+
       volumes:
         - name: init-script
           configMap:
             name: mysql-init-script
+
   volumeClaimTemplates:
-  - metadata:
-      name: mysql-storage
-    spec:
-      accessModes: ["ReadWriteOnce"]
-      storageClassName: nfs-client
-      resources:
-        requests:
-          storage: 1Gi
+    - metadata:
+        name: mysql-storage
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: nfs-client
+        resources:
+          requests:
+            storage: 1Gi
 ---
 apiVersion: v1
 kind: Service
