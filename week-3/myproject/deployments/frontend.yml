@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: f1
-        image: thamizhanm3/bank-frontend:v1
+        image: thamizhanm3/bank-frontend:v2
         envFrom:
         - configMapRef:
             name: fcm
